@@ -7,8 +7,7 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.example.demo.config.BaseResponseStatus.POST_USERS_EXISTS_EMAIL;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class ProfileService {
@@ -27,9 +26,9 @@ public class ProfileService {
 
     // 프로필 추가(POST)
     public ProfileAddRes createProfile(ProfileAddReq profileAddReq) throws BaseException {
-        // 중복 확인: 해당 이메일을 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        // 중복 확인: 해당 이름 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
         if (profileProvider.checkProfile(profileAddReq.getName()) == 1) {
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+            throw new BaseException(POST_PROFILE_EXISTS_NAME);
         }
 
         try {

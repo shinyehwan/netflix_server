@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.POST_USERS_EMPTY_EMAIL;
-import static com.example.demo.config.BaseResponseStatus.POST_USERS_INVALID_EMAIL;
+import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController // Rest API 또는 WebAPI를 개발하기 위한 어노테이션. @Controller + @ResponseBody 를 합친것.
@@ -53,23 +52,28 @@ public class UserController {
     // ******************************************************************************
 
     /**
-     * 회원가입 API
+     * 1. 회원가입 API
      * [POST] /users
      */
     // Body
     @ResponseBody
-    @PostMapping("/sign-up")    // POST 방식의 요청을 매핑하기 위한 어노테이션
+    @PostMapping("/new")    // POST 방식의 요청을 매핑하기 위한 어노테이션
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         //  @RequestBody란, 클라이언트가 전송하는 HTTP Request Body(우리는 JSON으로 통신하니, 이 경우 body는 JSON)를 자바 객체로 매핑시켜주는 어노테이션
         // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
         // email에 값이 존재하는지, 빈 값으로 요청하지는 않았는지 검사합니다. 빈값으로 요청했다면 에러 메시지를 보냅니다.
-        if (postUserReq.getEmail() == null) {
+        if (postUserReq.getEmail().isEmpty()) {
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현: 입력받은 이메일이 email@domain.xxx와 같은 형식인지 검사합니다. 형식이 올바르지 않다면 에러 메시지를 보냅니다.
         if (!isRegexEmail(postUserReq.getEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
+        // password를 입력해주세요
+        if (postUserReq.getPassword().isEmpty()) {
+            return new BaseResponse<>(POST_PROFILE_EMPTY_PASSWORD);
+        }
+
         try {
             PostUserRes postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
@@ -83,7 +87,7 @@ public class UserController {
      * [POST] /users/logIn
      */
     @ResponseBody
-    @PostMapping("/log-in")
+    @PostMapping("/login")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq) {
         try {
             // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
@@ -103,7 +107,7 @@ public class UserController {
      * 또는
      *
      * 해당 닉네임을 같는 유저들의 정보 조회 API
-     * [GET] /users? NickName=
+     * [GET] /users?nickmname=
      */
     //Query String
     @ResponseBody   // return되는 자바 객체를 JSON으로 바꿔서 HTTP body에 담는 어노테이션.

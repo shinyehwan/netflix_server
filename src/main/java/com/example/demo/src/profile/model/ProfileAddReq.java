@@ -9,7 +9,8 @@ import lombok.*;
 
 public class ProfileAddReq {
 
-    private int profileImageIdx;
     private int userIdx;
+    private int profileImageIdx;
     private String name;
+
 }

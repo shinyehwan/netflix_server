@@ -32,8 +32,11 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
 
 
-    POST_PROFILE_EMPTY_EMAIL(false, 2015, "이름을 입력해주세요"),
+    POST_PROFILE_EMPTY_NAME(false, 2020, "이름을 입력해주세요"),
 
+    // /users/login
+    POST_PROFILE_EXISTS_NAME(false, 2021, "중복된 이름입니다."),
+    POST_PROFILE_EMPTY_PASSWORD(false, 2022, "비밀번호를 입력해 주세요"),
 
     /**
      * 3000 : Response 오류
