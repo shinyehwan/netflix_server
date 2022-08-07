@@ -101,7 +101,7 @@ public class UserController {
 
 
     /**
-     * 모든 회원들의  조회 API
+     * 2. 모든 회원들의  조회 API
      * [GET] /users
      *
      * 또는
@@ -136,7 +136,7 @@ public class UserController {
 
 
     /**
-     * 회원 1명 조회 API
+     * 3. 회원 1명 조회 API
      * [GET] /users/:userIdx
      */
     // Path-variable
@@ -157,7 +157,7 @@ public class UserController {
     }
 
     /**
-     * 유저정보변경 API
+     * 4. 유저정보변경 API
      * [PATCH] /users/:userIdx
      */
     @ResponseBody
