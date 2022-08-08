@@ -1,11 +1,14 @@
 package com.example.demo.src.profile;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.profile.model.GetProfileBasketRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -29,6 +32,16 @@ public class ProfileProvider {
     public int checkProfile(String name) throws BaseException {
         try {
             return profileDao.checkProfile(name);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 해당 profileIdx를 갖는
+    public List<GetProfileBasketRes> getBasket(int userIdx, int profileIdx) throws BaseException {
+        try {
+            List<GetProfileBasketRes> getProfileBasketRes = profileDao.getBasket(userIdx, profileIdx);
+            return getProfileBasketRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

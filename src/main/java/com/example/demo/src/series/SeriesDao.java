@@ -128,6 +128,37 @@ public class SeriesDao {
 
     }
 
+    // 해당 시리즈의 모든 시즌을 조회
+    public List<GetSeriesSeasonRes> getSeason(int seriesId) {
+        String sql = "select seriesId, Season.season\n" +
+                "from Season\n" +
+                "where seriesId = ?";
+        int param = seriesId;
+        return this.jdbcTemplate.query(sql,
+                (rs, rowNum) -> new GetSeriesSeasonRes(
+                        rs.getInt("seriesId"),
+                        rs.getInt("season")),
+                param);
+    }
+
+    public List<GetSeriesEpisodeRes> getEpisode(int seriesId, int season) {
+            String sql = "select Season.seriesId, Season.season, Episode.name, Episode.episodeImgUrl,Episode.episodeRuntime,Episode.episodeSummary\n" +
+                    "from Season, Episode\n" +
+                    "where Season.episodeId = Episode.id and Season.seriesId = ? and Season.season = ?";
+            int param1 = seriesId;
+            int param2 = season;
+            return this.jdbcTemplate.query(sql,
+                    (rs, rowNum) -> new GetSeriesEpisodeRes(
+                            rs.getInt("seriesId"),
+                            rs.getInt("season"),
+                            rs.getString("name"),
+                            rs.getString("episodeImgUrl"),
+                            rs.getInt("episodeRuntime"),
+                            rs.getString("episodeSummary")),
+                    param1, param2);
+        }
+
+
 
 
 

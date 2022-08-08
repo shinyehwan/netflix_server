@@ -3,6 +3,7 @@ package com.example.demo.src.movie;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.movie.model.*;
+import com.example.demo.src.series.model.GetSeriesEpisodeRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class MovieController {
     }
 
     /**
-     * 메인 화면 단순 영화 포스터 조회
+     * 1. 메인 화면 단순 영화 포스터 조회
      * /movie
      */
 
@@ -42,7 +43,7 @@ public class MovieController {
     }
 
     /**
-     * 모든 영화 정보 조회 API
+     * 2. 모든 영화 정보 조회 API
      * [GET] /movie/info
      *
      * 해당 posterUrl을 갖는 영화 정보 조회 API
@@ -68,7 +69,7 @@ public class MovieController {
     }
 
     /**
-     * 제목 검색
+     * 3. 제목 검색
      * 해당 타이틀을 갖는 영화 포스터 조회
      * /movie-title?title=
      */
@@ -87,7 +88,7 @@ public class MovieController {
     }
 
     /**
-     * 감독 검색
+     * 4. 감독 검색
      * /movie-director?director=
      */
     @ResponseBody
@@ -104,7 +105,7 @@ public class MovieController {
     }
 
     /**
-     * 배우 검색
+     * 5. 배우 검색
      * @param actor
      * /movie-actor?actor=
      */
@@ -120,7 +121,7 @@ public class MovieController {
 
     }
     /**
-     * 각본가 검색
+     * 6. 각본가 검색
      * @param writer
      * /movie-writer?writer=
      */
@@ -137,7 +138,7 @@ public class MovieController {
 
     }
     /**
-     * 장르 검색
+     * 7. 장르 검색
      * @param genre
      * /movie-genre?genre=
      */
@@ -153,6 +154,8 @@ public class MovieController {
         }
 
     }
+
+
 
 
 

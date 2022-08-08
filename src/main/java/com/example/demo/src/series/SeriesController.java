@@ -25,7 +25,7 @@ public class SeriesController {
     }
 
     /**
-     * 메인 화면 단순 영화 포스터 조회
+     * 8. 메인 화면 단순 영화 포스터 조회
      * /series
      */
 
@@ -42,7 +42,7 @@ public class SeriesController {
     }
 
     /**
-     * 모든 영화 정보 조회 API
+     * 9. 모든 영화 정보 조회 API
      * [GET] /series/info
      *
      * 해당 posterUrl을 갖는 영화 정보 조회 API
@@ -68,7 +68,7 @@ public class SeriesController {
     }
 
     /**
-     * 제목 검색
+     * 10. 제목 검색
      * 해당 타이틀을 갖는 영화 포스터 조회
      * /Series-title?title=
      */
@@ -88,7 +88,7 @@ public class SeriesController {
 
 
     /**
-     * 배우 검색
+     * 11. 배우 검색
      * @param actor
      * /Series-actor?actor=
      */
@@ -104,7 +104,7 @@ public class SeriesController {
 
     }
     /**
-     * 크리에이터 검색
+     * 12. 크리에이터 검색
      * @param creator
      * /Series-creator?creator=
      */
@@ -121,7 +121,7 @@ public class SeriesController {
 
     }
     /**
-     * 장르 검색
+     * 13. 장르 검색
      * @param genre
      * /Series-genre?genre=
      */
@@ -138,9 +138,37 @@ public class SeriesController {
 
     }
 
+    /**
+     * 14. 시리즈 관련 시즌 리스트 정렬
+     *
+     */
 
+    @ResponseBody
+    @GetMapping("/{seriesId}/season")
+    public BaseResponse<List<GetSeriesSeasonRes>> getSeriesSeason(@PathVariable int seriesId) {
+        try {
+            List<GetSeriesSeasonRes> getSeriesSeason = seriesProvider.getSeason(seriesId);
+            return new BaseResponse<>(getSeriesSeason);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
+    /**
+     * 15. 시리즈 관련 시즌에 따른 에피소드 리스트 정렬
+     *
+     */
 
-
+    @ResponseBody
+    @GetMapping("/{seriesId}/season/{season}/episode")
+    public BaseResponse<List<GetSeriesEpisodeRes>> getSeriesEpisode(@PathVariable int seriesId,
+                                                                    @PathVariable int season) {
+        try {
+            List<GetSeriesEpisodeRes> getSeriesEpisode = seriesProvider.getEpisode(seriesId, season);
+            return new BaseResponse<>(getSeriesEpisode);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 }
