@@ -2,7 +2,6 @@ package com.example.demo.src.series;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.series.model.*;
-import com.example.demo.src.user.model.GetUserRes;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,6 +105,14 @@ public class SeriesProvider {
         try {
             List<GetSeriesEpisodeRes> getSeriesEpisodeRes = seriesDao.getEpisode(seriesId, season);
             return getSeriesEpisodeRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public List<GetSeriesDetailAll> getDetail(int seriesId) throws BaseException {
+        try {
+            List<GetSeriesDetailAll> getSeriesDetail = seriesDao.getDetail(seriesId);
+            return getSeriesDetail;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

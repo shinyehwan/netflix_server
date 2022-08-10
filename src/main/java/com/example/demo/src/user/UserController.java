@@ -53,7 +53,7 @@ public class UserController {
 
     /**
      * 1. 회원가입 API
-     * [POST] /users
+     * [POST] /users/new
      */
     // Body
     @ResponseBody

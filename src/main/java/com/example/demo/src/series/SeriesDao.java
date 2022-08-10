@@ -21,7 +21,7 @@ public class SeriesDao {
 
     // 모든 시리즈 정보 조회
     public List<GetSeriesInfoRes> getSeriesInfoTotal() {
-        String getSeriesByTitleQuery = "select * from Series";
+        String getSeriesByTitleQuery = "select Series.id, title, summary, releaseYear, runtime, filmUrl, previewUrl, filmRating, resolution, posterUrl, isOriginal, Season.id, Season.episodeId from Series, Season";
         return this.jdbcTemplate.query(getSeriesByTitleQuery,
                 (rs, rowNum) -> new GetSeriesInfoRes(
                         rs.getInt("id"),
@@ -29,19 +29,23 @@ public class SeriesDao {
                         rs.getString("summary"),
                         rs.getString("releaseYear"),
                         rs.getInt("runtime"),
-                        rs.getString("SeriesUrl"),
+                        rs.getString("filmUrl"),
                         rs.getString("previewUrl"),
                         rs.getInt("filmRating"),
                         rs.getString("resolution"),
                         rs.getString("posterUrl"),
-                        rs.getInt("isOriginal")
+                        rs.getInt("isOriginal"),
+                        rs.getInt("id"),
+                        rs.getInt("episodeId")
                 )
         ); // 해당 posterUrl을 갖는 모든 Series 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
     }
 
     // 해당 posterUrl 갖는 시리즈들의 정보 조회
     public List<GetSeriesInfoRes> getSeries(String posterUrl){
-        String getSeriesQuery = "select * from Series where posterUrl = ?";
+        String getSeriesQuery = "select Series.id, title, summary, releaseYear, runtime, filmUrl, previewUrl, filmRating, resolution, posterUrl, isOriginal, Season.id, Season.episodeId\n" +
+                "from Series, Season\n" +
+                "where Series.id = Season.seriesId and posterUrl = ?";
         String getSeriesByTitleParams = posterUrl;
         return this.jdbcTemplate.query(getSeriesQuery,
                 (rs, rowNum) -> new GetSeriesInfoRes(
@@ -50,12 +54,14 @@ public class SeriesDao {
                         rs.getString("summary"),
                         rs.getString("releaseYear"),
                         rs.getInt("runtime"),
-                        rs.getString("SeriesUrl"),
+                        rs.getString("filmUrl"),
                         rs.getString("previewUrl"),
                         rs.getInt("filmRating"),
                         rs.getString("resolution"),
                         rs.getString("posterUrl"),
-                        rs.getInt("isOriginal")
+                        rs.getInt("isOriginal"),
+                        rs.getInt("id"),
+                        rs.getInt("episodeId")
                         ), getSeriesByTitleParams  // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
         ); // 복수개의 회원정보들을 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보)의 결과 반환(동적쿼리가 아니므로 Parmas부분이 없음)
 
@@ -101,10 +107,9 @@ public class SeriesDao {
     }
 
     // 해당 크리에이터가 참여한 영화들의 포스터 조회
-    public List<GetSeriesCreatorPosterRes> getSeriesPosterByCreator(String Creator){
-        String getSeriesPosterByCreatorQuery = "select Creator.name, Series.posterUrl from Series, ParticipateCreator, Creator " +
-                "where ParticipateCreator.seriesId = Series.id and ParticipateCreator.CreatorId = Creator.id and Creator.name = ?";
-        String getSeriesPosterByCreatorParams = Creator;
+    public List<GetSeriesCreatorPosterRes> getSeriesPosterByCreator(String creator){
+        String getSeriesPosterByCreatorQuery = "select Creator.name, Series.posterUrl from Series, ParticipateCreator, Creator where ParticipateCreator.seriesId = Series.id and ParticipateCreator.creatorId = Creator.id and Creator.name = ?";
+        String getSeriesPosterByCreatorParams = creator;
         return this.jdbcTemplate.query(getSeriesPosterByCreatorQuery,
                 (rs, rowNum) -> new GetSeriesCreatorPosterRes(
                         rs.getString("name"),
@@ -157,6 +162,30 @@ public class SeriesDao {
                             rs.getString("episodeSummary")),
                     param1, param2);
         }
+    public List<GetSeriesDetailAll> getDetail(int seriesId) {
+                String sql = "select Actor.name as actorName, Creator.name as creatorName, Series.filmRating, Genre.genre, FeatureSeries.seriesFeature\n" +
+                        "from Actor, Series, ParticipateActor, Creator, ParticipateCreator, Genre, ContactGenre, ContactFeatureSeries, FeatureSeries\n" +
+                        "where Series.id = ParticipateActor.seriesId\n" +
+                        "  and ParticipateActor.actorId = Actor.id\n" +
+                        "  and Series.id = ParticipateCreator.seriesId\n" +
+                        "  and ParticipateCreator.creatorId = Creator.id\n" +
+                        "  and Series.id = ContactGenre.seriesId\n" +
+                        "  and ContactGenre.genreId = Genre.id\n" +
+                        "  and Series.id = ContactFeatureSeries.seriesId\n" +
+                        "  and ContactFeatureSeries.featureSeriesId = FeatureSeries.id\n" +
+                        "   and Series.id = ?";
+                int param = seriesId;
+
+                return this.jdbcTemplate.query(sql,
+                        (rs, rowNum) -> new GetSeriesDetailAll(
+                                rs.getString("actorName"),
+                                rs.getString("creatorName"),
+                                rs.getInt("filmRating"),
+                                rs.getString("genre"),
+                                rs.getString("seriesFeature")
+                                ), param
+                        );
+            }
 
 
 

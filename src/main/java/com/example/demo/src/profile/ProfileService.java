@@ -6,11 +6,13 @@ import com.example.demo.src.profile.model.PostProfileBasketRes;
 import com.example.demo.src.profile.model.ProfileAddReq;
 import com.example.demo.src.profile.model.ProfileAddRes;
 import com.example.demo.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
+@Slf4j
 @Service
 public class ProfileService {
 
@@ -34,7 +36,7 @@ public class ProfileService {
         }
 
         try {
-            int profileIdx = profileDao.createProfile(userIdx, profileAddReq);
+            int profileIdx= profileDao.createProfile(userIdx, profileAddReq);
             return new ProfileAddRes(profileIdx);
 
 //  *********** 해당 부분은 7주차 수업 후 주석해제하서 대체해서 사용해주세요! ***********

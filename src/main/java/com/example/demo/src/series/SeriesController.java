@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.series.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,6 +69,21 @@ public class SeriesController {
     }
 
     /**
+     * 16. 시리즈 더보기 누를시 디테일한 정보
+     * /series/info/detail
+     */
+    @ResponseBody
+    @GetMapping("/{seriesId}/detail")
+    public BaseResponse<List<GetSeriesDetailAll>> getSeriesDetail(@PathVariable int seriesId) {
+        try {
+            List<GetSeriesDetailAll> getSeriesDetailAll = seriesProvider.getDetail(seriesId);
+            return new BaseResponse<>(getSeriesDetailAll);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
      * 10. 제목 검색
      * 해당 타이틀을 갖는 영화 포스터 조회
      * /Series-title?title=
@@ -85,7 +101,6 @@ public class SeriesController {
         }
 
     }
-
 
     /**
      * 11. 배우 검색
@@ -120,6 +135,7 @@ public class SeriesController {
         }
 
     }
+
     /**
      * 13. 장르 검색
      * @param genre
@@ -170,5 +186,4 @@ public class SeriesController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
 }

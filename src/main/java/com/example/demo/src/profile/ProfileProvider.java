@@ -1,6 +1,7 @@
 package com.example.demo.src.profile;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.profile.model.GetProfileAlarmRes;
 import com.example.demo.src.profile.model.GetProfileBasketRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -37,11 +38,20 @@ public class ProfileProvider {
         }
     }
 
-    // 해당 profileIdx를 갖는
+    // 해당 profileIdx를 갖는 찜하기 목록 조회
     public List<GetProfileBasketRes> getBasket(int userIdx, int profileIdx) throws BaseException {
         try {
             List<GetProfileBasketRes> getProfileBasketRes = profileDao.getBasket(userIdx, profileIdx);
             return getProfileBasketRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    // 해당 profileIdx를 갖는
+    public List<GetProfileAlarmRes> getAlarm(int userIdx, int profileIdx) throws BaseException {
+        try {
+            List<GetProfileAlarmRes> getProfileAlarmRes = profileDao.getAlarm(userIdx, profileIdx);
+            return getProfileAlarmRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

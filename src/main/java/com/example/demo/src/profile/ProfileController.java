@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.profile.model.*;
 import com.example.demo.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +12,9 @@ import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
+@Slf4j
 @RestController
-@RequestMapping("/netflix/users/{userIdx}/profile")
+@RequestMapping("/netflix/users/profile")
 public class ProfileController {
 
     @Autowired
@@ -34,16 +36,16 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/new")    // POST 방식의 요청을 매핑하기 위한 어노테이션
-    public BaseResponse<ProfileAddRes> createProfile(@PathVariable int userIdx,
-                                                     @RequestBody ProfileAddReq profileAddReq) {
+    public BaseResponse<ProfileAddRes> createProfile(@PathVariable int userIdx, @RequestBody ProfileAddReq profileAddReq) {
         //  @RequestBody란, 클라이언트가 전송하는 HTTP Request Body(우리는 JSON으로 통신하니, 이 경우 body는 JSON)를 자바 객체로 매핑시켜주는 어노테이션
         // TODO: name 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
         // Validation 관련질문 -> .isEmpty()는 가능한데 왜 == NULL 은 불가한가?
+
         if (profileAddReq.getName().isEmpty()) {
             return new BaseResponse<>(POST_PROFILE_EMPTY_NAME);
         }
         try {
-            ProfileAddRes profileAddRes = profileService.createProfile(userIdx,profileAddReq);
+            ProfileAddRes profileAddRes = profileService.createProfile(userIdx, profileAddReq);
             return new BaseResponse<>(profileAddRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -55,8 +57,8 @@ public class ProfileController {
      * [POST]
      */
     @ResponseBody
-    @PostMapping("/{profileIdx}/basket/new")    // POST 방식의 요청을 매핑하기 위한 어노테 이션
-    public BaseResponse<PostProfileBasketRes> createBasket(@PathVariable int userIdx, @RequestBody PostProfileBasketReq postProfileBasketReq) {
+    @PostMapping("/basket/new")    // POST 방식의 요청을 매핑하기 위한 어노테 이션
+    public BaseResponse<PostProfileBasketRes> createBasket(@RequestBody PostProfileBasketReq postProfileBasketReq) {
         //  @RequestBody란, 클라이언트가 전송하는 HTTP Request Body(우리는 JSON으로 통신하니, 이 경우 body는 JSON)를 자바 객체로 매핑시켜주는 어노테이션
         try {
             PostProfileBasketRes postProfileBasketRes = profileService.createBasket(postProfileBasketReq);
@@ -69,10 +71,10 @@ public class ProfileController {
     /**
      * 내가 찜한 목록 조회
      * [GET]
-     * /netflix/user/:userIdx/profile/:profileIdx/basket
+     * /netflix/user/profile/basket
      */
 
-    @GetMapping("/{profileIdx}/basket")
+    @GetMapping("/basket")
     public BaseResponse<List<GetProfileBasketRes>> getProfileBasket(@PathVariable int userIdx,
                                                                     @PathVariable int profileIdx){
         try {
@@ -85,6 +87,23 @@ public class ProfileController {
 
     }
 
+    /**
+     * 알람설정
+     * [GET]
+     * /netflix/users/:userIdx/profile/:profileIdx/alarm
+     */
 
+    @GetMapping("/{profileIdx}/alarm")
+    public BaseResponse<List<GetProfileAlarmRes>> getProfileAlarm(@PathVariable int userIdx,
+                                                                    @PathVariable int profileIdx){
+        try {
+            List<GetProfileAlarmRes> getProfileAlarmRes = profileProvider.getAlarm(userIdx ,profileIdx);
+            return new BaseResponse<>(getProfileAlarmRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+
+        }
+
+    }
 
 }
