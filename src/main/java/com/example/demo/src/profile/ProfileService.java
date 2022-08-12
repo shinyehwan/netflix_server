@@ -29,14 +29,14 @@ public class ProfileService {
 
 
     // 프로필 추가(POST)
-    public ProfileAddRes createProfile(ProfileAddReq profileAddReq) throws BaseException {
+    public ProfileAddRes createProfile(int userIdx, ProfileAddReq profileAddReq) throws BaseException {
         // 중복 확인: 해당 이름 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
         // 해당 유저 아이디에서만 중복이 불가능하고, 유저아이디가 다르면 중복을 허용하였다.
-        if (profileProvider.checkProfile(profileAddReq.getUserIdx(), profileAddReq.getName()) == 1) {
+        if (profileProvider.checkProfile(profileAddReq.getName()) == 1) {
             throw new BaseException(POST_PROFILE_EXISTS_NAME);
         }
         try {
-            int profileIdx= profileDao.createProfile(profileAddReq);
+            int profileIdx= profileDao.createProfile(userIdx, profileAddReq);
             return new ProfileAddRes(profileIdx);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
@@ -46,9 +46,9 @@ public class ProfileService {
 
     // 찜하기 추가
     public PostProfileBasketRes createBasket(PostProfileBasketReq postProfileBasketReq) throws BaseException {
-        // 중복 확인: 해당 이름 가진 유저가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
-//        if (profileProvider.checkProfile(postProfileBasketReq.getName()) == 1) {
-//            throw new BaseException(POST_PROFILE_EXISTS_NAME);
+        // 중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+//        if (profileProvider.checkBasket(postProfileBasketReq.getProfileId()) == 1) {
+//            throw new BaseException(POST_BASKET_EXISTS_CONENTS);
 //        }
 
         try {

@@ -30,13 +30,21 @@ public class ProfileProvider {
 
 
     // 해당 프로필이 이미 Profile Table에 존재하는지 확인
-    public int checkProfile(int userId, String name) throws BaseException {
+    public int checkProfile(String name) throws BaseException {
         try {
-            return profileDao.checkProfile(userId, name);
+            return profileDao.checkProfile(name);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+//    // 해당 프로필이 이미 Basket Table에 존재하는지 확인
+//        public int checkBasket(int profileId) throws BaseException {
+//            try {
+//                return profileDao.checkBasket(profileId);
+//            } catch (Exception exception) {
+//                throw new BaseException(DATABASE_ERROR);
+//            }
+//        }
 
     // 해당 profileIdx를 갖는 찜하기 목록 조회
     public List<GetProfileBasketRes> getBasket(int userIdx, int profileIdx) throws BaseException {

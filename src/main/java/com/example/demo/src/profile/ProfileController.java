@@ -14,7 +14,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/netflix/users/profile")
+@RequestMapping("/netflix/users/{userIdx}/profile")
 public class ProfileController {
 
     @Autowired
@@ -36,30 +36,35 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/new")    // POST 방식의 요청을 매핑하기 위한 어노테이션
-    public BaseResponse<ProfileAddRes> createProfile(@RequestBody ProfileAddReq profileAddReq) {
-        //  @RequestBody란, 클라이언트가 전송하는 HTTP Request Body(우리는 JSON으로 통신하니, 이 경우 body는 JSON)를 자바 객체로 매핑시켜주는 어노테이션
-        // TODO: name 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
+    public BaseResponse<ProfileAddRes> createProfile(@PathVariable int userIdx, @RequestBody ProfileAddReq profileAddReq) {
         // Validation 관련질문 -> .isEmpty()는 가능한데 왜 == NULL 은 불가한가?
 
         if (profileAddReq.getName().isEmpty()) {
             return new BaseResponse<>(POST_PROFILE_EMPTY_NAME);
         }
+
         try {
-            ProfileAddRes profileAddRes = profileService.createProfile(profileAddReq);
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            ProfileAddRes profileAddRes = profileService.createProfile(userIdx, profileAddReq);
             return new BaseResponse<>(profileAddRes);
-        } catch (BaseException exception) {
+            }
+         catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
 
     /**
      * 해당 프로필에서 찜하기 추가 API
-     * [POST]
+     * [POST] // 아직 validation 을 구현하지 못했음
      */
     @ResponseBody
-    @PostMapping("/basket/new")    // POST 방식의 요청을 매핑하기 위한 어노테 이션
-    public BaseResponse<PostProfileBasketRes> createBasket(@RequestBody PostProfileBasketReq postProfileBasketReq) {
-        //  @RequestBody란, 클라이언트가 전송하는 HTTP Request Body(우리는 JSON으로 통신하니, 이 경우 body는 JSON)를 자바 객체로 매핑시켜주는 어노테이션
+    @PostMapping("/basket/new")
+    public BaseResponse<PostProfileBasketRes> createBasket(@PathVariable int userIdx, @RequestBody PostProfileBasketReq postProfileBasketReq) {
         try {
             PostProfileBasketRes postProfileBasketRes = profileService.createBasket(postProfileBasketReq);
             return new BaseResponse<>(postProfileBasketRes);
@@ -71,10 +76,10 @@ public class ProfileController {
     /**
      * 내가 찜한 목록 조회
      * [GET]
-     * /netflix/user/profile/basket
+     *
      */
 
-    @GetMapping("/basket")
+    @GetMapping("{profileIdx}/basket")
     public BaseResponse<List<GetProfileBasketRes>> getProfileBasket(@PathVariable int userIdx,
                                                                     @PathVariable int profileIdx){
         try {

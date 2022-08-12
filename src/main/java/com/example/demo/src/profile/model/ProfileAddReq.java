@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class ProfileAddReq {
-    private int userIdx;
     private int profileImageId;
     private String name;
 }

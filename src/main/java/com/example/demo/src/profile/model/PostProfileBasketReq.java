@@ -10,6 +10,6 @@ public class PostProfileBasketReq {
 
     private int profileId;
     private int movieId;
-    private String seriesId;
+    private int seriesId;
 
 }
