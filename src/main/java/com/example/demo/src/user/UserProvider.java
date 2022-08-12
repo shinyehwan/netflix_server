@@ -41,7 +41,6 @@ public class UserProvider {
         this.userDao = userDao;
         this.jwtService = jwtService; // JWT부분은 7주차에 다루므로 모르셔도 됩니다!
     }
-    // ******************************************************************************
 
 
     // 로그인(password 검사)
@@ -57,11 +56,8 @@ public class UserProvider {
 
         if (postLoginReq.getPassword().equals(password)) { //비말번호가 일치한다면 userIdx를 가져온다.
             int userIdx = userDao.getPwd(postLoginReq).getUserIdx();
-            return new PostLoginRes(userIdx);
-//  *********** 해당 부분은 7주차 - JWT 수업 후 주석해제 및 대체해주세요!  **************** //
-//            String jwt = jwtService.createJwt(userIdx);
-//            return new PostLoginRes(userIdx,jwt);
-//  **************************************************************************
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostLoginRes(userIdx, jwt);
 
         } else { // 비밀번호가 다르다면 에러메세지를 출력한다.
             throw new BaseException(FAILED_TO_LOGIN);
@@ -88,24 +84,13 @@ public class UserProvider {
         }
     }
 
-    // 해당 nickname을 갖는 User들의 정보 조회
-    public List<GetUserRes> getUsersByNickname(String nickname) throws BaseException {
-        try {
-            List<GetUserRes> getUsersRes = userDao.getUsersByNickname(nickname);
-            return getUsersRes;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-
     // 해당 userIdx를 갖는 User의 정보 조회
     public GetUserRes getUser(int userIdx) throws BaseException {
         try {
             GetUserRes getUserRes = userDao.getUser(userIdx);
             return getUserRes;
         } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
+            throw new BaseException(USERS_MATCH_USER_ID);
         }
     }
 

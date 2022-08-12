@@ -24,15 +24,18 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    USERS_MATCH_USER_ID(false, 2011, "존재하지 않는 유저 아이디 입니다."),
+
+
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
-
+    POST_USERS_EXISTS_PHONE(false, 2018, "핸드폰 번호를 입력해주세요."),
 
     POST_PROFILE_EMPTY_NAME(false, 2020, "이름을 입력해주세요"),
+
 
     // /users/login
     POST_PROFILE_EXISTS_NAME(false, 2021, "중복된 이름입니다."),
@@ -57,7 +60,7 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
-    MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
+    MODIFY_FAIL_PAYMENT(false,4014,"유저 결제 수단 수정 실패"),
 
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다.");

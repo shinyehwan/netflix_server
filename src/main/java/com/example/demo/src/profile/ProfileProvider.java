@@ -30,9 +30,9 @@ public class ProfileProvider {
 
 
     // 해당 프로필이 이미 Profile Table에 존재하는지 확인
-    public int checkProfile(String name) throws BaseException {
+    public int checkProfile(int userId, String name) throws BaseException {
         try {
-            return profileDao.checkProfile(name);
+            return profileDao.checkProfile(userId, name);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

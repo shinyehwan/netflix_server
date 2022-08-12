@@ -101,7 +101,7 @@ public class MovieDao {
 
      // 해당 배우가 참여한 영화들의 포스터 조회
     public List<GetMovieActorPosterRes> getMoviePosterByActor(String actor){
-        String getMoviePosterByActorQuery = "select Actor.name, Movie.posterUrl from Movie, ParticipateActor,Actor\n" +
+        String getMoviePosterByActorQuery = "select Actor.name, Movie.posterUrl from Movie, ParticipateActor, Actor\n" +
                 "where ParticipateActor.movieId = Movie.id and ParticipateActor.actorId = Actor.id and Actor.name = ?";
         String getMoviePosterByActorDirectorParams = actor;
         return this.jdbcTemplate.query(getMoviePosterByActorQuery,

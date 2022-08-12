@@ -21,22 +21,23 @@ public class ProfileDao {
     }
 
     // 프로필 추가
-    public int createProfile(int userIdx, ProfileAddReq profileAddReq) {
+    public int createProfile(ProfileAddReq profileAddReq) {
 
         String createProfileQuery = "insert into Profile (userId, profileImageId, name) VALUES (?, ?, ?)"; // 실행될 동적 쿼리문
-        Object[] createProfileParams = new Object[]{userIdx, profileAddReq.getProfileImageId(), profileAddReq.getName()};
+        Object[] createProfileParams = new Object[]{profileAddReq.getUserIdx(), profileAddReq.getProfileImageId(), profileAddReq.getName()};
         this.jdbcTemplate.update(createProfileQuery, createProfileParams); // 동적 쿼리의 ?부분에 주입될 값
         String lastInserIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값을 가져온다.
         return this.jdbcTemplate.queryForObject(lastInserIdQuery, int.class); // 해당 쿼리문의 결과 마지막으로 삽인된 유저의 profileIdx번호를 반환한다.
     }
 
     // 프로필 확인
-    public int checkProfile(String name) {
-        String checkNameQuery = "select exists (select name from Profile where name = ?)";
-        String checkNameParams = name; // 해당(확인할) 이름 값
+    public int checkProfile(int userId, String name) {
+        String checkNameQuery = "select exists (select name from Profile where userId = ? and name = ?)";
+        int checkUserParam1 = userId;
+        String checkNameParams2 = name; // 해당(확인할) 이름 값
         return this.jdbcTemplate.queryForObject(checkNameQuery,
                 int.class,
-                checkNameParams); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+                checkUserParam1, checkNameParams2); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
     }
 
     // 찜하기 추가

@@ -9,6 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetSeriesPosterUrlRes {
 
-    private int id;
+    private int seriesId;
     private String posterUrl;
 }
