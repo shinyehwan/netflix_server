@@ -10,6 +10,6 @@ import lombok.Setter;
 public class GetProfileBasketRes {
     private int userId;
     private int profileId;
-    private String moviePosterUrl;
-    private String seriesPosterUrl;
+    private String movieId;
+    private String seriesId;
 }

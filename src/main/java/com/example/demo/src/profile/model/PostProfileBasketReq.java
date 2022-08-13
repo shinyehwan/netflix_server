@@ -8,8 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostProfileBasketReq {
 
-    private int profileId;
-    private int movieId;
-    private int seriesId;
+    private Integer movieId;
+    private Integer seriesId;
 
 }

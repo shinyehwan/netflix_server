@@ -3,6 +3,7 @@ package com.example.demo.src.series;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.series.model.*;
+import com.example.demo.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
@@ -10,19 +11,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
+
 @RestController
-@RequestMapping("/netflix/series")
+@RequestMapping("/netflix/users/{userIdx}/profile/{profileIdx}/series")
 @Slf4j
 public class SeriesController {
 
     private final SeriesProvider seriesProvider;
     private final SeriesService seriesService;
+    private final JwtService jwtService;
 
     @Autowired
-    public SeriesController(SeriesProvider seriesProvider, SeriesService seriesService)
+    public SeriesController(SeriesProvider seriesProvider, SeriesService seriesService, JwtService jwtService)
     {
         this.seriesProvider = seriesProvider;
         this.seriesService = seriesService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -32,8 +37,13 @@ public class SeriesController {
 
     @ResponseBody
     @GetMapping
-    public BaseResponse<List<GetSeriesPosterUrlRes>> getSeriesPoster(){
+    public BaseResponse<List<GetSeriesPosterUrlRes>> getSeriesPoster(@PathVariable int userIdx){
         try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetSeriesPosterUrlRes> getSeriesPosterUrlRes = seriesProvider.getSeriesPoster();
             return new BaseResponse<>(getSeriesPosterUrlRes);
         } catch (BaseException exception) {
@@ -52,7 +62,7 @@ public class SeriesController {
 
     @ResponseBody
     @GetMapping("/info")
-    public BaseResponse<List<GetSeriesInfoRes>> getSeries(@RequestParam(required = false) String posterUrl){
+    public BaseResponse<List<GetSeriesInfoRes>> getSeries(@PathVariable int userIdx, @RequestParam(required = false) String posterUrl){
 
         try{
             if (posterUrl == null) {
@@ -74,7 +84,7 @@ public class SeriesController {
      */
     @ResponseBody
     @GetMapping("/{seriesId}/detail")
-    public BaseResponse<List<GetSeriesDetailAll>> getSeriesDetail(@PathVariable int seriesId) {
+    public BaseResponse<List<GetSeriesDetailAll>> getSeriesDetail(@PathVariable int userIdx, @PathVariable int seriesId) {
         try {
             List<GetSeriesDetailAll> getSeriesDetailAll = seriesProvider.getDetail(seriesId);
             return new BaseResponse<>(getSeriesDetailAll);
@@ -91,7 +101,7 @@ public class SeriesController {
 
     @ResponseBody
     @GetMapping("/series-title")
-    public BaseResponse<List<GetSeriesTitlePosterRes>> getSeriesTitle(@RequestParam String title){
+    public BaseResponse<List<GetSeriesTitlePosterRes>> getSeriesTitle(@PathVariable int userIdx, @RequestParam String title){
 
         try{
             List<GetSeriesTitlePosterRes> getSeriesTitlePosterRes = seriesProvider.getSeriesPosterByTitle(title);
@@ -109,7 +119,7 @@ public class SeriesController {
      */
     @ResponseBody
     @GetMapping("/series-actor")
-    public BaseResponse<List<GetSeriesActorPosterRes>> getSeriesActor(@RequestParam String actor){
+    public BaseResponse<List<GetSeriesActorPosterRes>> getSeriesActor(@PathVariable int userIdx, @RequestParam String actor){
         try{
             List<GetSeriesActorPosterRes> getSeriesActorPosterRes = seriesProvider.getSeriesPosterByActor(actor);
             return new BaseResponse<>(getSeriesActorPosterRes);
@@ -125,7 +135,7 @@ public class SeriesController {
      */
     @ResponseBody
     @GetMapping("/series-creator")
-    public BaseResponse<List<GetSeriesCreatorPosterRes>> getSeriesCreator(@RequestParam String creator){
+    public BaseResponse<List<GetSeriesCreatorPosterRes>> getSeriesCreator(@PathVariable int userIdx, @RequestParam String creator){
 
         try{
             List<GetSeriesCreatorPosterRes> getSeriesCreatorPosterRes = seriesProvider.getSeriesPosterByCreator(creator);
@@ -143,7 +153,7 @@ public class SeriesController {
      */
     @ResponseBody
     @GetMapping("/series-genre")
-    public BaseResponse<List<GetSeriesGenrePosterRes>> getSeriesGenre(@RequestParam String genre){
+    public BaseResponse<List<GetSeriesGenrePosterRes>> getSeriesGenre(@PathVariable int userIdx, @RequestParam String genre){
 
         try{
             List<GetSeriesGenrePosterRes> getSeriesGenrePosterRes = seriesProvider.getSeriesPosterByGenre(genre);
@@ -161,7 +171,7 @@ public class SeriesController {
 
     @ResponseBody
     @GetMapping("/{seriesId}/season")
-    public BaseResponse<List<GetSeriesSeasonRes>> getSeriesSeason(@PathVariable int seriesId) {
+    public BaseResponse<List<GetSeriesSeasonRes>> getSeriesSeason(@PathVariable int userIdx, @PathVariable int seriesId) {
         try {
             List<GetSeriesSeasonRes> getSeriesSeason = seriesProvider.getSeason(seriesId);
             return new BaseResponse<>(getSeriesSeason);
@@ -177,7 +187,8 @@ public class SeriesController {
 
     @ResponseBody
     @GetMapping("/{seriesId}/season/{season}/episode")
-    public BaseResponse<List<GetSeriesEpisodeRes>> getSeriesEpisode(@PathVariable int seriesId,
+    public BaseResponse<List<GetSeriesEpisodeRes>> getSeriesEpisode(@PathVariable int userIdx,
+                                                                    @PathVariable int seriesId,
                                                                     @PathVariable int season) {
         try {
             List<GetSeriesEpisodeRes> getSeriesEpisode = seriesProvider.getEpisode(seriesId, season);

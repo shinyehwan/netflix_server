@@ -39,19 +39,26 @@ public class ProfileDao {
                 checkNameParams2); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
     }
 
-//    // 찜하기 확인
-//    public int checkBasket(int profileId) {
-//        String checkNameQuery = "select exists (select profileId from Basket where movieId = ? and seriesId = ?)";
-//        int param1 = profileId;
+    // 찜하기 확인
+//    public int checkBasketMovie(int movieId) {
+//        String checkNameQuery = "select exists (select movieId from Basket where movieId = ?)";
+//        int param1 = movieId;
 //        return this.jdbcTemplate.queryForObject(checkNameQuery,
 //                int.class,
 //                param1); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
 //    }
+//    public int checkBasketSeries(int seriesId) {
+//            String checkNameQuery = "select exists (select seriesId from Basket where seriesId = ?)";
+//            int param1 = seriesId;
+//            return this.jdbcTemplate.queryForObject(checkNameQuery,
+//                    int.class,
+//                    param1); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+//        }
 
     // 찜하기 추가
-    public int createBasket(PostProfileBasketReq postProfileBasketReq) {
+    public int createBasket(int userIdx, int profileIdx, PostProfileBasketReq postProfileBasketReq) {
         String createBasketQuery = "insert into Basket (profileId, movieId, seriesId) VALUES (?, ?, ?)"; // 실행될 동적 쿼리문
-        Object[] createBasketParams = new Object[]{postProfileBasketReq.getProfileId(), postProfileBasketReq.getMovieId(), postProfileBasketReq.getSeriesId()}; // 동적 쿼리의 ?부분에 주입될 값
+        Object[] createBasketParams = new Object[]{profileIdx, postProfileBasketReq.getMovieId(), postProfileBasketReq.getSeriesId()}; // 동적 쿼리의 ?부분에 주입될 값
         this.jdbcTemplate.update(createBasketQuery, createBasketParams);
         String lastInserIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
         return this.jdbcTemplate.queryForObject(lastInserIdQuery, int.class); // 해당 쿼리문의 결과 마지막으로 삽입된 찜하기의 Idx번호를 반환한다.
@@ -60,7 +67,7 @@ public class ProfileDao {
 
     // 해당유저의 프로필의 찜하기 조회
     public List<GetProfileBasketRes> getBasket(int userIdx, int profileIdx){
-        String query = "select User.userIdx, Profile.profileIdx, Movie.posterUrl, Series.posterUrl\n" +
+        String query = "select User.userIdx, Profile.profileIdx, Movie.id as movieId, Series.id as seriesId\n" +
                 "from User, Profile, Basket, Movie, Series\n" +
                 "where User.userIdx = Profile.userId and Basket.profileId = Profile.profileIdx and Basket.movieId = Movie.id and Basket.seriesId = Series.id\n" +
                 "and User.userIdx = ? and Profile.profileIdx = ?";
@@ -70,8 +77,8 @@ public class ProfileDao {
                 (rs, rowNum) -> new GetProfileBasketRes(
                         rs.getInt("userIdx"),
                         rs.getInt("profileIdx"),
-                        rs.getString("posterUrl"),
-                        rs.getString("posterUrl")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
+                        rs.getString("movieId"),
+                        rs.getString("seriesId")), // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
                 Param1, Param2
                 ); //
     }

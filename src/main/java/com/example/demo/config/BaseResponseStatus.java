@@ -42,7 +42,7 @@ public enum BaseResponseStatus {
     POST_PROFILE_EMPTY_PASSWORD(false, 2022, "비밀번호를 입력해 주세요"),
 
     // basket
-    POST_BASKET_EXISTS_CONENTS(false, 2030, "이미 추가 하였습니다."),
+    POST_BASKET_EXISTS_CONTENTS(false, 2030, "이미 추가 하였습니다."),
 
 
     /**

@@ -10,4 +10,5 @@ import lombok.Setter;
 
 public class ProfileAddRes {
     private int profileIdx;
+    private String jwt;
 }

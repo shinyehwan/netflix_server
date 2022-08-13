@@ -1,10 +1,7 @@
 package com.example.demo.src.profile;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.profile.model.PostProfileBasketReq;
-import com.example.demo.src.profile.model.PostProfileBasketRes;
-import com.example.demo.src.profile.model.ProfileAddReq;
-import com.example.demo.src.profile.model.ProfileAddRes;
+import com.example.demo.src.profile.model.*;
 import com.example.demo.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,10 @@ public class ProfileService {
         }
         try {
             int profileIdx= profileDao.createProfile(userIdx, profileAddReq);
-            return new ProfileAddRes(profileIdx);
+//            return new ProfileAddRes(profileIdx);
+
+            String jwt = jwtService.createJwt2(profileIdx);
+            return new ProfileAddRes(profileIdx, jwt);
 
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
@@ -45,21 +45,19 @@ public class ProfileService {
     }
 
     // 찜하기 추가
-    public PostProfileBasketRes createBasket(PostProfileBasketReq postProfileBasketReq) throws BaseException {
+    public PostProfileBasketRes createBasket(int userIdx, int profileIdx, PostProfileBasketReq postProfileBasketReq) throws BaseException {
         // 중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
-//        if (profileProvider.checkBasket(postProfileBasketReq.getProfileId()) == 1) {
+//        if (profileProvider.checkBasketMovie(postProfileBasketReq.getMovieId()) == 1) {
+//            throw new BaseException(POST_BASKET_EXISTS_CONENTS);
+//        }
+//
+//        if (profileProvider.checkBasketSeries(postProfileBasketReq.getSeriesId()) == 1) {
 //            throw new BaseException(POST_BASKET_EXISTS_CONENTS);
 //        }
 
         try {
-            int basketIdx = profileDao.createBasket(postProfileBasketReq);
+            int basketIdx = profileDao.createBasket(userIdx, profileIdx, postProfileBasketReq);
             return new PostProfileBasketRes(basketIdx);
-
-//  *********** 해당 부분은 7주차 수업 후 주석해제하서 대체해서 사용해주세요! ***********
-//            //jwt 발급.
-//            String jwt = jwtService.createJwt(userIdx);
-//            return new PostUserRes(jwt,userIdx);
-//  *********************************************************************
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }
