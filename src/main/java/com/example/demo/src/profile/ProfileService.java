@@ -46,18 +46,37 @@ public class ProfileService {
 
     // 찜하기 추가
     public PostProfileBasketRes createBasket(int userIdx, int profileIdx, PostProfileBasketReq postProfileBasketReq) throws BaseException {
-        // 중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
-//        if (profileProvider.checkBasketMovie(postProfileBasketReq.getMovieId()) == 1) {
-//            throw new BaseException(POST_BASKET_EXISTS_CONENTS);
-//        }
-//
-//        if (profileProvider.checkBasketSeries(postProfileBasketReq.getSeriesId()) == 1) {
-//            throw new BaseException(POST_BASKET_EXISTS_CONENTS);
-//        }
+//         중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        if (profileProvider.checkBasketMovie(profileIdx, postProfileBasketReq.getMovieId()) == 1) {
+            throw new BaseException(POST_BASKET_EXISTS_MOVIE);
+        }
+
+        if (profileProvider.checkBasketSeries(profileIdx, postProfileBasketReq.getSeriesId()) == 1) {
+            throw new BaseException(POST_BASKET_EXISTS_SERIES);
+        }
 
         try {
             int basketIdx = profileDao.createBasket(userIdx, profileIdx, postProfileBasketReq);
             return new PostProfileBasketRes(basketIdx);
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 좋아요 추가
+    public PostProfileAssessRes createAssess(int userIdx, int profileIdx, PostProfileAssessReq postProfileAssessReq) throws BaseException {
+//         중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 평가가 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        if (profileProvider.checkAssessMovie(profileIdx, postProfileAssessReq.getMovieId()) == 1) {
+            throw new BaseException(POST_ACCESS_EXISTS_MOVIE);
+        }
+
+        if (profileProvider.checkAssessSeries(profileIdx, postProfileAssessReq.getSeriesId()) == 1) {
+            throw new BaseException(POST_ACCESS_EXISTS_SERIES);
+        }
+
+        try {
+            int assessmentIdx = profileDao.createAssess(userIdx, profileIdx, postProfileAssessReq);
+            return new PostProfileAssessRes(assessmentIdx);
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }

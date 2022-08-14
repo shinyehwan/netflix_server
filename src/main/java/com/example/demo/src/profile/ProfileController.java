@@ -60,7 +60,7 @@ public class ProfileController {
 
     /**
      * 2-2 해당 프로필에서 찜하기 추가 API
-     * [POST] // validation 처리를 못했다.
+     * [POST]
      */
     @ResponseBody
     @PostMapping("{profileIdx}/basket/new")
@@ -68,7 +68,6 @@ public class ProfileController {
                                                            @PathVariable int profileIdx,
                                                            @RequestBody PostProfileBasketReq postProfileBasketReq) {
         try {
-
             int userIdxByJwt = jwtService.getUserIdx();
             //userIdx와 접근한 유저가 같은지 확인
             if(userIdx != userIdxByJwt) {
@@ -83,6 +82,36 @@ public class ProfileController {
 
             PostProfileBasketRes postProfileBasketRes = profileService.createBasket(userIdx, profileIdx, postProfileBasketReq);
             return new BaseResponse<>(postProfileBasketRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 해당 컨텐츠 좋아요 추가하기 API
+     * [POST]
+     */
+    @ResponseBody
+    @PostMapping("{profileIdx}/assessment")
+    public BaseResponse<PostProfileAssessRes> createBasket(@PathVariable int userIdx,
+                                                           @PathVariable int profileIdx,
+                                                           @RequestBody PostProfileAssessReq postProfileAssessReq) {
+        try {
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PostProfileAssessRes postProfileAssessRes = profileService.createAssess(userIdx, profileIdx, postProfileAssessReq);
+            return new BaseResponse<>(postProfileAssessRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -149,5 +178,9 @@ public class ProfileController {
         }
 
     }
+
+
+
+
 
 }

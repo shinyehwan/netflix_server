@@ -41,6 +41,17 @@ public class MovieController {
     public BaseResponse<List<GetMoviePosterUrlRes>> getMoviePoster(@PathVariable int userIdx,
                                                                    @PathVariable int profileIdx){
         try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMoviePosterUrlRes> getMoviePosterUrlRes = movieProvider.getMoviePoster();
             return new BaseResponse<>(getMoviePosterUrlRes);
         } catch (BaseException exception) {

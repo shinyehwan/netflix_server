@@ -33,7 +33,6 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     POST_USERS_EXISTS_PHONE(false, 2018, "핸드폰 번호를 입력해주세요."),
-
     POST_PROFILE_EMPTY_NAME(false, 2020, "이름을 입력해주세요"),
 
 
@@ -42,7 +41,13 @@ public enum BaseResponseStatus {
     POST_PROFILE_EMPTY_PASSWORD(false, 2022, "비밀번호를 입력해 주세요"),
 
     // basket
-    POST_BASKET_EXISTS_CONTENTS(false, 2030, "이미 추가 하였습니다."),
+    POST_BASKET_EXISTS_MOVIE(false, 2030, "이 영화는 이미 찜하기에 추가 하였습니다."),
+    POST_BASKET_EXISTS_SERIES(false, 2031, "이 시리즈는 이미 찜하기에 추가 하였습니다."),
+
+    // assess
+    POST_ACCESS_EXISTS_MOVIE(false, 2032, "이 영화는 이미 평가하였습니다."),
+    POST_ACCESS_EXISTS_SERIES(false, 2033, "이 시리즈는 이미 평가하였습니다."),
+
 
 
     /**

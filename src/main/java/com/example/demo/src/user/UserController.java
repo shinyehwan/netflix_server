@@ -72,7 +72,6 @@ public class UserController {
         if (postUserReq.getPassword().isEmpty()) {
             return new BaseResponse<>(POST_PROFILE_EMPTY_PASSWORD);
         }
-
         // 핸드폰 번호를 입력해주세요.
         if(postUserReq.getPhone().isEmpty()){
             return new BaseResponse<>(POST_USERS_EXISTS_PHONE);
@@ -85,6 +84,7 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
 
     /**
      * 로그인 API
@@ -103,6 +103,7 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
 
 
     /**
@@ -156,12 +157,13 @@ public class UserController {
 
     }
 
+
 //   /**
-//     * 4. 유저 결제 정보변경 API
-//     * [PATCH] /users/:userIdx
+//     * 4. 유저 결제 상세 정보 조회
+//     * [GET] /users/:userIdx/info
 //     */
 //    @ResponseBody
-//    @PatchMapping("/{userIdx}")
+//    @PatchMapping("/{userIdx}/info")
 //    public BaseResponse<String> modifyUserPayment(@PathVariable int userIdx, @RequestBody User user) {
 //        try {
 //            //jwt에서 idx 추출.

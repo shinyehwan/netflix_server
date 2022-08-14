@@ -37,21 +37,41 @@ public class ProfileProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-//    // 해당 프로필이 이미 Basket Table에 존재하는지 확인
-//        public int checkBasketMovie(int movieId) throws BaseException {
-//            try {
-//                return profileDao.checkBasketMovie(movieId);
-//            } catch (Exception exception) {
-//                throw new BaseException(DATABASE_ERROR);
-//            }
-//        }
-//        public int checkBasketSeries(int seriesId) throws BaseException {
-//                try {
-//                    return profileDao.checkBasketSeries(seriesId);
-//                } catch (Exception exception) {
-//                    throw new BaseException(DATABASE_ERROR);
-//                }
-//            }
+
+    // 해당 프로필이 이미 Basket Table에 존재하는지 확인
+    public int checkBasketMovie(int profileIdx, int movieId) throws BaseException {
+        try {
+            return profileDao.checkBasketMovie(profileIdx, movieId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public int checkBasketSeries(int profileIdx, int seriesId) throws BaseException {
+            try {
+                return profileDao.checkBasketSeries(profileIdx, seriesId);
+            } catch (Exception exception) {
+                throw new BaseException(DATABASE_ERROR);
+            }
+        }
+
+
+        // 해당 프로필이 이미 Basket Table에 존재하는지 확인
+    public int checkAssessMovie(int profileIdx, int movieId) throws BaseException {
+        try {
+            return profileDao.checkAssessMovie(profileIdx, movieId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public int checkAssessSeries(int profileIdx, int seriesId) throws BaseException {
+            try {
+                return profileDao.checkAssessSeries(profileIdx, seriesId);
+            } catch (Exception exception) {
+                throw new BaseException(DATABASE_ERROR);
+            }
+        }
+
+
 
     // 해당 profileIdx를 갖는 찜하기 목록 조회
     public List<GetProfileBasketRes> getBasket(int userIdx, int profileIdx) throws BaseException {
@@ -62,7 +82,8 @@ public class ProfileProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    // 해당 profileIdx를 갖는
+
+    // 알람
     public List<GetProfileAlarmRes> getAlarm(int userIdx, int profileIdx) throws BaseException {
         try {
             List<GetProfileAlarmRes> getProfileAlarmRes = profileDao.getAlarm(userIdx, profileIdx);
