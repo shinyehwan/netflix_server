@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-
-// 모든 영화 조회
-public class
-GetSeriesInfoRes {
-
+public class GetSeriesInfoTotalRes {
     private int seriesIdx;
     private String title;
     private String summary;
@@ -23,7 +19,4 @@ GetSeriesInfoRes {
     private String resolution;
     private String posterUrl;
     private int isOriginal;
-    private int SeasonIdx;
-    private int EpisodeIdx;
-
 }

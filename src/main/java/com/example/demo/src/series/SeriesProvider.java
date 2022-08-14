@@ -42,10 +42,10 @@ public class SeriesProvider {
         }
     }
     // 영화 이름으로 조회
-    public List<GetSeriesInfoRes> getSeriesInfoTotal() throws BaseException {
+    public List<GetSeriesInfoTotalRes> getSeriesInfoTotal() throws BaseException {
         try {
-            List<GetSeriesInfoRes> getSeriesInfoRes = seriesDao.getSeriesInfoTotal();
-            return getSeriesInfoRes;
+            List<GetSeriesInfoTotalRes> getSeriesInfoTotalRes = seriesDao.getSeriesInfoTotal();
+            return getSeriesInfoTotalRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

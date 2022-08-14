@@ -89,6 +89,7 @@ public class UserController {
     /**
      * 로그인 API
      * [POST] /users/logIn
+     * jwt 생성
      */
     @ResponseBody
     @PostMapping("/login")
@@ -135,14 +136,20 @@ public class UserController {
     // Path-variable
     @ResponseBody
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
-    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<GetMembershipIncludeRes> getUser(@PathVariable("userIdx") int userIdx) {
         // @PathVariable RESTful(URL)에서 명시된 파라미터({})를 받는 어노테이션, 이 경우 userId값을 받아옴.
         //  null값 or 공백값이 들어가는 경우는 적용하지 말 것
         //  .(dot)이 포함된 경우, .을 포함한 그 뒤가 잘려서 들어감
         // Get Users
         try {
-            GetUserRes getUserRes = userProvider.getUser(userIdx);
-            return new BaseResponse<>(getUserRes);
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            GetMembershipIncludeRes getMembershipIncludeRes = userProvider.getUser(userIdx);
+            return new BaseResponse<>(getMembershipIncludeRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -165,7 +172,7 @@ public class UserController {
 //            }
 //            //같다면 유저네임 변경
 //
-//            PatchUserReq patchUserReq = new PatchUserReq(userIdx, user.getPaymentType());
+//            PatchUserReq patchUserReq = new PatchUserReq(userIdx, user.getMemberShipName());
 //            userService.modifyUserPayment(patchUserReq);
 //
 //            String result = "결제 정보가 수정되었습니다.";

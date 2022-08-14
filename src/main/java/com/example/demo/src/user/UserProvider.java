@@ -2,10 +2,7 @@ package com.example.demo.src.user;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.secret.Secret;
-import com.example.demo.src.user.model.GetUserRes;
-import com.example.demo.src.user.model.PostLoginReq;
-import com.example.demo.src.user.model.PostLoginRes;
-import com.example.demo.src.user.model.User;
+import com.example.demo.src.user.model.*;
 import com.example.demo.utils.AES128;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -85,10 +82,10 @@ public class UserProvider {
     }
 
     // 해당 userIdx를 갖는 User의 정보 조회
-    public GetUserRes getUser(int userIdx) throws BaseException {
+    public GetMembershipIncludeRes getUser(int userIdx) throws BaseException {
         try {
-            GetUserRes getUserRes = userDao.getUser(userIdx);
-            return getUserRes;
+            GetMembershipIncludeRes getMembershipIncludeRes = userDao.getUser(userIdx);
+            return getMembershipIncludeRes;
         } catch (Exception exception) {
             throw new BaseException(USERS_MATCH_USER_ID);
         }

@@ -4,25 +4,31 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.movie.model.*;
 import com.example.demo.src.series.model.GetSeriesEpisodeRes;
+import com.example.demo.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
+
 @RestController
-@RequestMapping("/netflix/movie")
+@RequestMapping("/netflix/users/{userIdx}/profile/{profileIdx}/movie")
 @Slf4j
 public class MovieController {
 
     private final MovieProvider movieProvider;
     private final MovieService service;
+    private final JwtService jwtService;
 
     @Autowired
-    public MovieController(MovieProvider movieProvider, MovieService service)
+    public MovieController(MovieProvider movieProvider, MovieService service, JwtService jwtService)
     {
         this.movieProvider = movieProvider;
         this.service = service;
+        this.jwtService = jwtService;
+
     }
 
     /**
@@ -32,7 +38,8 @@ public class MovieController {
 
     @ResponseBody
     @GetMapping
-    public BaseResponse<List<GetMoviePosterUrlRes>> getMoviePoster(){
+    public BaseResponse<List<GetMoviePosterUrlRes>> getMoviePoster(@PathVariable int userIdx,
+                                                                   @PathVariable int profileIdx){
         try{
             List<GetMoviePosterUrlRes> getMoviePosterUrlRes = movieProvider.getMoviePoster();
             return new BaseResponse<>(getMoviePosterUrlRes);
@@ -52,9 +59,23 @@ public class MovieController {
 
     @ResponseBody
     @GetMapping("/info")
-    public BaseResponse<List<GetMovieInfoRes>> getMovie(@RequestParam(required = false) String posterUrl){
+    public BaseResponse<List<GetMovieInfoRes>> getMovie(@PathVariable int userIdx,
+                                                        @PathVariable int profileIdx,
+                                                        @RequestParam(required = false) String posterUrl){
 
         try{
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             if (posterUrl == null) {
                 List<GetMovieInfoRes> getMovieInfoRes = movieProvider.getMovieInfoTotal();
                 return new BaseResponse<>(getMovieInfoRes);
@@ -76,9 +97,23 @@ public class MovieController {
 
     @ResponseBody
     @GetMapping("/movie-title")
-    public BaseResponse<List<GetMovieTitlePosterRes>> getMovieTitle(@RequestParam String title){
+    public BaseResponse<List<GetMovieTitlePosterRes>> getMovieTitle(@PathVariable int userIdx,
+                                                                    @PathVariable int profileIdx,
+                                                                    @RequestParam String title){
 
         try{
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMovieTitlePosterRes> getMovieTitlePosterRes = movieProvider.getMoviePosterByTitle(title);
             return new BaseResponse<>(getMovieTitlePosterRes);
         } catch (BaseException exception) {
@@ -93,9 +128,23 @@ public class MovieController {
      */
     @ResponseBody
     @GetMapping("/movie-director")
-    public BaseResponse<List<GetMovieDirectorPosterRes>> getMovieDirector(@RequestParam String director){
+    public BaseResponse<List<GetMovieDirectorPosterRes>> getMovieDirector(@PathVariable int userIdx,
+                                                                          @PathVariable int profileIdx,
+                                                                          @RequestParam String director){
 
         try{
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMovieDirectorPosterRes> getMovieDirectorPosterRes = movieProvider.getMoviePosterByDirector(director);
             return new BaseResponse<>(getMovieDirectorPosterRes);
         } catch (BaseException exception) {
@@ -111,8 +160,21 @@ public class MovieController {
      */
     @ResponseBody
     @GetMapping("/movie-actor")
-    public BaseResponse<List<GetMovieActorPosterRes>> getMovieActor(@RequestParam String actor){
+    public BaseResponse<List<GetMovieActorPosterRes>> getMovieActor(@PathVariable int userIdx,
+                                                                    @PathVariable int profileIdx,
+                                                                    @RequestParam String actor){
         try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMovieActorPosterRes> getMovieActorPosterRes = movieProvider.getMoviePosterByActor(actor);
             return new BaseResponse<>(getMovieActorPosterRes);
         } catch (BaseException exception) {
@@ -127,9 +189,22 @@ public class MovieController {
      */
     @ResponseBody
     @GetMapping("/movie-writer")
-    public BaseResponse<List<GetMovieWriterPosterRes>> getMovieWriter(@RequestParam String writer){
+    public BaseResponse<List<GetMovieWriterPosterRes>> getMovieWriter(@PathVariable int userIdx,
+                                                                      @PathVariable int profileIdx,
+                                                                      @RequestParam String writer){
 
         try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMovieWriterPosterRes> getMovieWriterPosterRes = movieProvider.getMoviePosterByWriter(writer);
             return new BaseResponse<>(getMovieWriterPosterRes);
         } catch (BaseException exception) {
@@ -144,9 +219,22 @@ public class MovieController {
      */
     @ResponseBody
     @GetMapping("/movie-genre")
-    public BaseResponse<List<GetMovieGenrePosterRes>> getMovieGenre(@RequestParam String genre){
+    public BaseResponse<List<GetMovieGenrePosterRes>> getMovieGenre(@PathVariable int userIdx,
+                                                                    @PathVariable int profileIdx,
+                                                                    @RequestParam String genre){
 
         try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetMovieGenrePosterRes> getMovieGenrePosterRes = movieProvider.getMoviePosterByGenre(genre);
             return new BaseResponse<>(getMovieGenrePosterRes);
         } catch (BaseException exception) {

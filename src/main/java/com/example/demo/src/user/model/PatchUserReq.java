@@ -12,5 +12,5 @@ import lombok.*;
  */
 public class PatchUserReq {
     private int userIdx;
-    private int paymentType;
+    private String membershipName;
 }

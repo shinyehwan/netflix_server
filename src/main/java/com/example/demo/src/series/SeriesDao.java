@@ -19,11 +19,12 @@ public class SeriesDao {
     }
 
 
-    // 모든 시리즈 정보 조회
-    public List<GetSeriesInfoRes> getSeriesInfoTotal() {
-        String getSeriesByTitleQuery = "select Series.id, title, summary, releaseYear, runtime, filmUrl, previewUrl, filmRating, resolution, posterUrl, isOriginal, Season.id, Season.episodeId from Series, Season";
-        return this.jdbcTemplate.query(getSeriesByTitleQuery,
-                (rs, rowNum) -> new GetSeriesInfoRes(
+    // 모든 시리즈 정보 조회(시즌, 에피소드 제외)
+    public List<GetSeriesInfoTotalRes> getSeriesInfoTotal() {
+        String getSeriesInfoQuery = "select Series.id, title, summary, releaseYear, runtime, filmUrl, previewUrl, filmRating, resolution, posterUrl, isOriginal from Series";
+
+        return this.jdbcTemplate.query(getSeriesInfoQuery,
+                (rs, rowNum) -> new GetSeriesInfoTotalRes(
                         rs.getInt("id"),
                         rs.getString("title"),
                         rs.getString("summary"),
@@ -34,11 +35,9 @@ public class SeriesDao {
                         rs.getInt("filmRating"),
                         rs.getString("resolution"),
                         rs.getString("posterUrl"),
-                        rs.getInt("isOriginal"),
-                        rs.getInt("id"),
-                        rs.getInt("episodeId")
+                        rs.getInt("isOriginal")
                 )
-        ); // 해당 posterUrl을 갖는 모든 Series 정보를 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보, Params)의 결과 반환
+        );
     }
 
     // 해당 posterUrl 갖는 시리즈들의 정보 조회
