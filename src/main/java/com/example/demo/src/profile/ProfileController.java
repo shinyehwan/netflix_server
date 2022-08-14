@@ -59,14 +59,14 @@ public class ProfileController {
     }
 
     /**
-     * 2-2 해당 프로필에서 찜하기 추가 API
+     * 2 해당 프로필에서 찜하기 영화 추가 API
      * [POST]
      */
     @ResponseBody
-    @PostMapping("{profileIdx}/basket/new")
-    public BaseResponse<PostProfileBasketRes> createBasket(@PathVariable int userIdx,
-                                                           @PathVariable int profileIdx,
-                                                           @RequestBody PostProfileBasketReq postProfileBasketReq) {
+    @PostMapping("{profileIdx}/movie/basket/new")
+    public BaseResponse<PostProfileBasketMovieRes> createBasket(@PathVariable int userIdx,
+                                                                @PathVariable int profileIdx,
+                                                                @RequestBody PostProfileBasketMovieReq postProfileBasketMovieReq) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             //userIdx와 접근한 유저가 같은지 확인
@@ -80,24 +80,22 @@ public class ProfileController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            PostProfileBasketRes postProfileBasketRes = profileService.createBasket(userIdx, profileIdx, postProfileBasketReq);
-            return new BaseResponse<>(postProfileBasketRes);
+            PostProfileBasketMovieRes postProfileBasketMovieRes = profileService.createBasket(userIdx, profileIdx, postProfileBasketMovieReq);
+            return new BaseResponse<>(postProfileBasketMovieRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
     /**
-     * 해당 컨텐츠 좋아요 추가하기 API
+     * 2 해당 프로필에서 찜하기 시리즈 추가 API
      * [POST]
      */
     @ResponseBody
-    @PostMapping("{profileIdx}/assessment")
-    public BaseResponse<PostProfileAssessRes> createBasket(@PathVariable int userIdx,
-                                                           @PathVariable int profileIdx,
-                                                           @RequestBody PostProfileAssessReq postProfileAssessReq) {
+    @PostMapping("{profileIdx}/series/basket/new")
+    public BaseResponse<PostProfileBasketSeriesRes> createBasket(@PathVariable int userIdx,
+                                                                @PathVariable int profileIdx,
+                                                                @RequestBody PostProfileBasketSeriesReq postProfileBasketSeriesReq) {
         try {
-
             int userIdxByJwt = jwtService.getUserIdx();
             //userIdx와 접근한 유저가 같은지 확인
             if(userIdx != userIdxByJwt) {
@@ -110,8 +108,8 @@ public class ProfileController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            PostProfileAssessRes postProfileAssessRes = profileService.createAssess(userIdx, profileIdx, postProfileAssessReq);
-            return new BaseResponse<>(postProfileAssessRes);
+            PostProfileBasketSeriesRes postProfileBasketSeriesRes = profileService.createBasket2(userIdx, profileIdx, postProfileBasketSeriesReq);
+            return new BaseResponse<>(postProfileBasketSeriesRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -147,6 +145,38 @@ public class ProfileController {
         }
 
     }
+
+    /**
+     * 해당 컨텐츠 좋아요 추가하기 API
+     * [POST]
+     */
+    @ResponseBody
+    @PostMapping("{profileIdx}/assessment")
+    public BaseResponse<PostProfileAssessRes> createBasket(@PathVariable int userIdx,
+                                                           @PathVariable int profileIdx,
+                                                           @RequestBody PostProfileAssessReq postProfileAssessReq) {
+        try {
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PostProfileAssessRes postProfileAssessRes = profileService.createAssess(userIdx, profileIdx, postProfileAssessReq);
+            return new BaseResponse<>(postProfileAssessRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
 
     /**
      * 알람설정

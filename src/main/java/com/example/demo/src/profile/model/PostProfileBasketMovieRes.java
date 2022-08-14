@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GetProfileBasketRes {
-    private int profileId;
-    private String movieId;
-    private String seriesId;
+public class PostProfileBasketMovieRes {
+    private int basketMovieIdx;
 }

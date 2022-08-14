@@ -44,20 +44,31 @@ public class ProfileService {
         }
     }
 
-    // 찜하기 추가
-    public PostProfileBasketRes createBasket(int userIdx, int profileIdx, PostProfileBasketReq postProfileBasketReq) throws BaseException {
+    // 찜하기 추가 영화
+    public PostProfileBasketMovieRes createBasket(int userIdx, int profileIdx, PostProfileBasketMovieReq postProfileBasketMovieReq) throws BaseException {
 //         중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
-        if (profileProvider.checkBasketMovie(profileIdx, postProfileBasketReq.getMovieId()) == 1) {
+        if (profileProvider.checkBasketMovie(profileIdx, postProfileBasketMovieReq.getMovieId()) == 1) {
             throw new BaseException(POST_BASKET_EXISTS_MOVIE);
         }
 
-        if (profileProvider.checkBasketSeries(profileIdx, postProfileBasketReq.getSeriesId()) == 1) {
+        try {
+            int basketIdx = profileDao.createBasket(userIdx, profileIdx, postProfileBasketMovieReq);
+            return new PostProfileBasketMovieRes(basketIdx);
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 찜하기 추가 시리즈
+    public PostProfileBasketSeriesRes createBasket2(int userIdx, int profileIdx, PostProfileBasketSeriesReq postProfileBasketSeriesReq) throws BaseException {
+//         중복 확인: 해당 영화 고유 아이디나, 시리즈 고유아이디를 가진 프로필이 있는지 확인합니다. 중복될 경우, 에러 메시지를 보냅니다.
+        if (profileProvider.checkBasketMovie(profileIdx, postProfileBasketSeriesReq.getSeriesId()) == 1) {
             throw new BaseException(POST_BASKET_EXISTS_SERIES);
         }
 
         try {
-            int basketIdx = profileDao.createBasket(userIdx, profileIdx, postProfileBasketReq);
-            return new PostProfileBasketRes(basketIdx);
+            int basketIdx = profileDao.createBasket2(userIdx, profileIdx, postProfileBasketSeriesReq);
+            return new PostProfileBasketSeriesRes(basketIdx);
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }

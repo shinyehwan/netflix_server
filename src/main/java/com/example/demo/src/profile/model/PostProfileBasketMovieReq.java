@@ -6,9 +6,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostProfileBasketReq {
+public class PostProfileBasketMovieReq {
 
     private Integer movieId;
-    private Integer seriesId;
-
+    private int basket;
 }
