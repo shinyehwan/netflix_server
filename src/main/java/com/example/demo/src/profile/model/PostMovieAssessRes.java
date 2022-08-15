@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class PostProfileAssessRes {
-    private int assessmentIdx;
+public class PostMovieAssessRes {
+    private int assessMovieIdx;
 }

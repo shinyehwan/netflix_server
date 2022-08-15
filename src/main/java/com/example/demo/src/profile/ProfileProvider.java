@@ -54,6 +54,22 @@ public class ProfileProvider {
             }
         }
 
+        // 해당 프로필이 이미 Basket Table에 basket = 0 인지 존재하는지 확지
+    public int checkBasketMovie2(int profileIdx, int movieId) throws BaseException {
+        try {
+            return profileDao.checkBasketMovie2(profileIdx, movieId);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public int checkBasketSeries2(int profileIdx, int seriesId) throws BaseException {
+            try {
+                return profileDao.checkBasketSeries2(profileIdx, seriesId);
+            } catch (Exception exception) {
+                throw new BaseException(DATABASE_ERROR);
+            }
+        }
+
 
         // 해당 프로필이 이미 Basket Table에 존재하는지 확인
     public int checkAssessMovie(int profileIdx, int movieId) throws BaseException {

@@ -7,10 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class PostProfileAssessReq {
+public class PostMovieAssessReq {
 
-    private Integer movieId;
-    private Integer seriesId;
+    private int movieId;
     private int assessment;
 
 }

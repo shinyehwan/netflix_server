@@ -59,11 +59,11 @@ public class ProfileController {
     }
 
     /**
-     * 2 해당 프로필에서 찜하기 영화 추가 API
+     * 2-2 해당 프로필에서 찜하기 영화 추가 API
      * [POST]
      */
     @ResponseBody
-    @PostMapping("{profileIdx}/movie/basket/new")
+    @PostMapping("{profileIdx}/movie/basket")
     public BaseResponse<PostProfileBasketMovieRes> createBasket(@PathVariable int userIdx,
                                                                 @PathVariable int profileIdx,
                                                                 @RequestBody PostProfileBasketMovieReq postProfileBasketMovieReq) {
@@ -87,11 +87,11 @@ public class ProfileController {
         }
     }
     /**
-     * 2 해당 프로필에서 찜하기 시리즈 추가 API
+     * 2-3 해당 프로필에서 찜하기 시리즈 추가 API
      * [POST]
      */
     @ResponseBody
-    @PostMapping("{profileIdx}/series/basket/new")
+    @PostMapping("{profileIdx}/series/basket")
     public BaseResponse<PostProfileBasketSeriesRes> createBasket(@PathVariable int userIdx,
                                                                 @PathVariable int profileIdx,
                                                                 @RequestBody PostProfileBasketSeriesReq postProfileBasketSeriesReq) {
@@ -116,7 +116,7 @@ public class ProfileController {
     }
 
     /**
-     * 2-3. 내가 찜한 목록 조회
+     * 2-4. 내가 찜한 목록 조회
      * [GET]
      *
      */
@@ -147,14 +147,78 @@ public class ProfileController {
     }
 
     /**
-     * 해당 컨텐츠 좋아요 추가하기 API
+     * 2-5 영화 찜하기 취소(변경) API
+     * [PATCH] /movie/basket
+     */
+    @ResponseBody
+    @PatchMapping("/{profileIdx}/movie/basket")
+    public BaseResponse<String> modifyBasketMovie(@PathVariable int userIdx,
+                                               @PathVariable int profileIdx,
+                                               @RequestBody PatchBasketMovieReq patchBasketMovieReq) {
+        try {
+             //jwt에서 idx 추출.
+             int userIdxByJwt = jwtService.getUserIdx();
+             //userIdx와 접근한 유저가 같은지 확인
+             if(userIdx != userIdxByJwt){
+             return new BaseResponse<>(INVALID_USER_JWT);
+             }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            profileService.modifyBasketMovie(profileIdx, patchBasketMovieReq);
+
+            String result = "영화 찜하기가 취소 되었습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 2-6 시리즈 찜하기 취소(변경) API
+     * [PATCH] /series/basket
+     */
+    @ResponseBody
+    @PatchMapping("/{profileIdx}/series/basket")
+    public BaseResponse<String> modifyBasketSeries(@PathVariable int userIdx,
+                                               @PathVariable int profileIdx,
+                                               @RequestBody PatchBasketSeriesReq patchBasketSeriesReq) {
+        try {
+             //jwt에서 idx 추출.
+             int userIdxByJwt = jwtService.getUserIdx();
+             //userIdx와 접근한 유저가 같은지 확인
+             if(userIdx != userIdxByJwt){
+             return new BaseResponse<>(INVALID_USER_JWT);
+             }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+                 //같다면 유저네임 변경
+            profileService.modifyBasketSeries(profileIdx, patchBasketSeriesReq);
+
+            String result = "시리즈 찜하기가 취소되었습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 해당 컨텐츠 좋아요 영화 추가하기 API
      * [POST]
      */
     @ResponseBody
-    @PostMapping("{profileIdx}/assessment")
-    public BaseResponse<PostProfileAssessRes> createBasket(@PathVariable int userIdx,
-                                                           @PathVariable int profileIdx,
-                                                           @RequestBody PostProfileAssessReq postProfileAssessReq) {
+    @PostMapping("{profileIdx}/movie/assess")
+    public BaseResponse<PostMovieAssessRes> createBasket(@PathVariable int userIdx,
+                                                         @PathVariable int profileIdx,
+                                                         @RequestBody PostMovieAssessReq postMovieAssessReq) {
         try {
 
             int userIdxByJwt = jwtService.getUserIdx();
@@ -169,8 +233,40 @@ public class ProfileController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            PostProfileAssessRes postProfileAssessRes = profileService.createAssess(userIdx, profileIdx, postProfileAssessReq);
-            return new BaseResponse<>(postProfileAssessRes);
+            PostMovieAssessRes postMovieAssessRes = profileService.createAssess(userIdx, profileIdx, postMovieAssessReq);
+            return new BaseResponse<>(postMovieAssessRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 2 영화 좋아요 변경 API
+     * [PATCH] /movie/assess
+     */
+    @ResponseBody
+    @PatchMapping("/{profileIdx}/movie/assess")
+    public BaseResponse<String> modifyAccessMovie(@PathVariable int userIdx,
+                                                   @PathVariable int profileIdx,
+                                                   @RequestBody PatchAssessMovieReq patchAssessMovieReq) {
+        try {
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            //같다면 유저네임 변경
+            profileService.modifyAssessMovie(profileIdx, patchAssessMovieReq);
+
+            String result = "시리즈 좋아요가 변경되었습니다.";
+            return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -178,9 +274,12 @@ public class ProfileController {
 
 
 
+
+
+
     /**
      * 알람설정
-     * [GET]
+     * 2-11 [GET]
      * /netflix/users/:userIdx/profile/:profileIdx/alarm
      */
 

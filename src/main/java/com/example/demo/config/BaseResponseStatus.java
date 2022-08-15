@@ -43,6 +43,9 @@ public enum BaseResponseStatus {
     // basket
     POST_BASKET_EXISTS_MOVIE(false, 2030, "이 영화는 이미 찜하기에 추가 하였습니다."),
     POST_BASKET_EXISTS_SERIES(false, 2031, "이 시리즈는 이미 찜하기에 추가 하였습니다."),
+    PATCH_BASKET_EXISTS_MOVIE(false, 2032, "이 시리즈는 이미 찜하기에 추가 하였습니다."),
+    PATCH_BASKET_EXISTS_SERIES(false, 2033, "이 시리즈는 이미 찜하기에 추가 하였습니다."),
+    PATCH_BASKET_FAIL(false, 2032, "찜하기 수정에 실패하였습니다."),
 
     // assess
     POST_ACCESS_EXISTS_MOVIE(false, 2032, "이 영화는 이미 평가하였습니다."),
