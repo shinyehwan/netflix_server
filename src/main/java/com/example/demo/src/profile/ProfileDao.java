@@ -128,12 +128,50 @@ public class ProfileDao {
         return this.jdbcTemplate.queryForObject(lastInserIdQuery, int.class);
     }
 
+    // 좋아요 시리즈 추가
+    public int createAssess2(int userIdx, int profileIdx, PostSeriesAssessReq postSeriesAssessReq) {
+        String query = "insert into AssessSeries(profileId, seriesId, assessment) VALUES (?,?,?)";
+        Object[] Params = new Object[]{profileIdx, postSeriesAssessReq.getSeriesId(), postSeriesAssessReq.getAssessment()}; // 동적 쿼리의 ?부분에 주입될 값
+        this.jdbcTemplate.update(query, Params);
+        String lastInserIdQuery = "select last_insert_id()"; // 가장 마지막에 삽입된(생성된) id값은 가져온다.
+        return this.jdbcTemplate.queryForObject(lastInserIdQuery, int.class);
+    }
+
     // 좋아요 수정 영화
     public int modifyAssessMovie(int profileIdx, PatchAssessMovieReq patchAssessMovieReq) {
         String modifyUserMovieQuery = "update AssessMovie set assessment = ? where profileId = ? and movieId = ? ";
         Object[] modifyUserMovieParams = new Object[]{patchAssessMovieReq.getAssessment(), profileIdx, patchAssessMovieReq.getMovieId()};
 
         return this.jdbcTemplate.update(modifyUserMovieQuery, modifyUserMovieParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
+    }
+
+    // 좋아요 수정 시리즈
+    public int modifyAssessSeries(int profileIdx, PatchAssessSeriesReq patchAssessSeriesReq) {
+        String modifyUserMovieQuery = "update AssessSeries set assessment = ? where profileId = ? and seriesId = ? ";
+        Object[] modifyUserMovieParams = new Object[]{patchAssessSeriesReq.getAssessment(), profileIdx, patchAssessSeriesReq.getSeriesId()};
+
+        return this.jdbcTemplate.update(modifyUserMovieQuery, modifyUserMovieParams); // 대응시켜 매핑시켜 쿼리 요청(생성했으면 1, 실패했으면 0)
+    }
+
+    // 좋아요 확인
+    public int checkAssessMovie(int profileIdx, int movieId, int assessment) {
+        String checkNameQuery = "select exists (select movieId from AssessMovie where profileId = ? and movieId = ? and assessment = ?)";
+        int param1 = profileIdx;
+        int param2 = movieId;
+        int param3 = assessment;
+        return this.jdbcTemplate.queryForObject(checkNameQuery,
+                int.class,
+                param1, param2, param3); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
+    }
+
+    public int checkAssessSeries(int profileIdx, int seriesId, int assessment) {
+        String checkNameQuery = "select exists (select seriesId from AssessSeries where profileId =? and seriesId = ? and assessment = ?)";
+        int param1 = profileIdx;
+        int param2 = seriesId;
+        int param3 = assessment;
+        return this.jdbcTemplate.queryForObject(checkNameQuery,
+                int.class,
+                param1, param2, param3);
     }
 
 
@@ -182,27 +220,6 @@ public class ProfileDao {
                     Param1, Param2
                     ); //
         }
-
-
-    // 평가 확인
-    public int checkAssessMovie(int profileIdx, int movieId) {
-        String checkNameQuery = "select exists (select movieId from Assessment where profileId = ? and movieId = ?)";
-        int param1 = profileIdx;
-        int param2 = movieId;
-        return this.jdbcTemplate.queryForObject(checkNameQuery,
-                int.class,
-                param1, param2); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
-    }
-
-    public int checkAssessSeries(int profileIdx, int seriesId) {
-        String checkNameQuery = "select exists (select seriesId from Assessment where profileId =? and seriesId = ?)";
-        int param1 = profileIdx;
-        int param2 = seriesId;
-        return this.jdbcTemplate.queryForObject(checkNameQuery,
-                int.class,
-                param1, param2); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
-    }
-
 
 
 }

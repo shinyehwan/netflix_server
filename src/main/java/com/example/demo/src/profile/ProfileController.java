@@ -211,7 +211,7 @@ public class ProfileController {
     }
 
     /**
-     * 해당 컨텐츠 좋아요 영화 추가하기 API
+     * 2-7 해당 컨텐츠 좋아요 영화 추가하기 API
      * [POST]
      */
     @ResponseBody
@@ -235,6 +235,35 @@ public class ProfileController {
 
             PostMovieAssessRes postMovieAssessRes = profileService.createAssess(userIdx, profileIdx, postMovieAssessReq);
             return new BaseResponse<>(postMovieAssessRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    /**
+     * 2-8 해당 컨텐츠 좋아요 시리즈 추가하기 API
+     * [POST]
+     */
+    @ResponseBody
+    @PostMapping("{profileIdx}/series/assess")
+    public BaseResponse<PostSeriesAssessRes> createAssess(@PathVariable int userIdx,
+                                                         @PathVariable int profileIdx,
+                                                         @RequestBody PostSeriesAssessReq postSeriesAssessReq) {
+        try {
+
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            PostSeriesAssessRes postSeriesAssessRes = profileService.createAssess2(userIdx, profileIdx, postSeriesAssessReq);
+            return new BaseResponse<>(postSeriesAssessRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -264,6 +293,37 @@ public class ProfileController {
             }
             //같다면 유저네임 변경
             profileService.modifyAssessMovie(profileIdx, patchAssessMovieReq);
+
+            String result = "영화 좋아요가 변경되었습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+    /**
+     * 2 시리즈 좋아요 변경 API
+     * [PATCH] /series/assess
+     */
+    @ResponseBody
+    @PatchMapping("/{profileIdx}/series/assess")
+    public BaseResponse<String> modifyAccessSeries(@PathVariable int userIdx,
+                                                   @PathVariable int profileIdx,
+                                                   @RequestBody PatchAssessSeriesReq patchAssessSeriesReq) {
+        try {
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            //같다면 유저네임 변경
+            profileService.modifyAssessSeries(profileIdx, patchAssessSeriesReq);
 
             String result = "시리즈 좋아요가 변경되었습니다.";
             return new BaseResponse<>(result);

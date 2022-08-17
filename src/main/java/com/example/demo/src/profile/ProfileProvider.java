@@ -3,6 +3,7 @@ package com.example.demo.src.profile;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.profile.model.GetProfileAlarmRes;
 import com.example.demo.src.profile.model.GetProfileBasketRes;
+import com.example.demo.src.profile.model.PostMovieAssessReq;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,17 +72,17 @@ public class ProfileProvider {
         }
 
 
-        // 해당 프로필이 이미 Basket Table에 존재하는지 확인
-    public int checkAssessMovie(int profileIdx, int movieId) throws BaseException {
+        // 평가 테이블에 이미 존재하는지 확인
+    public int checkAssessMovie(int profileIdx, int movieId, int assessment) throws BaseException {
         try {
-            return profileDao.checkAssessMovie(profileIdx, movieId);
+            return profileDao.checkAssessMovie(profileIdx, movieId, assessment);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public int checkAssessSeries(int profileIdx, int seriesId) throws BaseException {
+    public int checkAssessSeries(int profileIdx, int seriesId, int assessment) throws BaseException {
             try {
-                return profileDao.checkAssessSeries(profileIdx, seriesId);
+                return profileDao.checkAssessSeries(profileIdx, seriesId, assessment);
             } catch (Exception exception) {
                 throw new BaseException(DATABASE_ERROR);
             }

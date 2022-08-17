@@ -3,6 +3,7 @@ package com.example.demo.src.movie;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.movie.model.*;
+import com.example.demo.src.series.model.GetSeriesDetailAll;
 import com.example.demo.src.series.model.GetSeriesEpisodeRes;
 import com.example.demo.utils.JwtService;
 import lombok.extern.slf4j.Slf4j;
@@ -254,6 +255,29 @@ public class MovieController {
 
     }
 
+    @ResponseBody
+    @GetMapping("/{movieId}/detail")
+    public BaseResponse<List<GetMovieDetailAll>> getMovieDetail(@PathVariable int userIdx,
+                                                                  @PathVariable int profileIdx,
+                                                                  @PathVariable int movieId) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            int profileIdxByJwt = jwtService.getProfileIdx();
+            //profileIdx와 접근한 유저가 같은지 확인
+            if(profileIdx != profileIdxByJwt) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetMovieDetailAll> getMovieDetailAll = movieProvider.getDetail(movieId);
+            return new BaseResponse<>(getMovieDetailAll);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
 

@@ -76,11 +76,10 @@ public class ProfileService {
 
     // 찜하기 영화 수정 (Patch)
     public void modifyBasketMovie(int profileIdx, PatchBasketMovieReq patchBasketMovieReq) throws BaseException {
+        if (profileProvider.checkBasketMovie2(profileIdx, patchBasketMovieReq.getMovieId()) == 1) {
+            throw new BaseException(PATCH_BASKET_EXISTS_MOVIE);
+        }
         try {
-
-//            if (profileProvider.checkBasketMovie2(profileIdx, patchBasketMovieReq.getMovieId()) == 1) {
-//                throw new BaseException(PATCH_BASKET_EXISTS_MOVIE);
-//            }
             int result = profileDao.modifyBasketMovie(profileIdx, patchBasketMovieReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
             if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
                 throw new BaseException(PATCH_BASKET_FAIL);
@@ -91,11 +90,12 @@ public class ProfileService {
     }
     // 찜하기 시리즈 수정 (Patch)
         public void modifyBasketSeries(int profileIdx, PatchBasketSeriesReq patchBasketSeriesReq) throws BaseException {
+
+            if (profileProvider.checkBasketSeries2(profileIdx, patchBasketSeriesReq.getSeriesId()) == 1) {
+                throw new BaseException(PATCH_BASKET_EXISTS_SERIES);
+            }
             try {
 
-//                if (profileProvider.checkBasketSeries(profileIdx, patchBasketSeriesReq.getSeriesId()) == 1) {
-//                    throw new BaseException(PATCH_BASKET_EXISTS_SERIES);
-//                }
 
                 int result = profileDao.modifyBasketSeries(profileIdx, patchBasketSeriesReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
                 if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
@@ -106,21 +106,50 @@ public class ProfileService {
             }
         }
 
-    // 좋아요 추가
+    // 좋아요 영화 추가
     public PostMovieAssessRes createAssess(int userIdx, int profileIdx, PostMovieAssessReq postMovieAssessReq) throws BaseException {
+
+        if (profileProvider.checkAssessMovie(profileIdx, postMovieAssessReq.getMovieId(), postMovieAssessReq.getAssessment()) == 1) {
+            throw new BaseException(POST_ASSESS_EXISTS_MOVIE);
+        }
         try {
+
             int assessmentIdx = profileDao.createAssess(userIdx, profileIdx, postMovieAssessReq);
             return new PostMovieAssessRes(assessmentIdx);
         } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    // 좋아요 시리즈 추가
+        public PostSeriesAssessRes createAssess2(int userIdx, int profileIdx, PostSeriesAssessReq postSeriesAssessReq) throws BaseException {
+            if (profileProvider.checkAssessSeries(profileIdx, postSeriesAssessReq.getSeriesId(),postSeriesAssessReq.getAssessment()) == 1) {
+                throw new BaseException(POST_ASSESS_EXISTS_SERIES);
+            }
+            try {
+                int assessmentIdx = profileDao.createAssess2(userIdx, profileIdx, postSeriesAssessReq);
+                return new PostSeriesAssessRes(assessmentIdx);
+            } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+                throw new BaseException(DATABASE_ERROR);
+            }
+        }
 
-    // 찜하기 영화 수정 (Patch)
+    // 좋아요 영화 수정 (Patch)
     public void modifyAssessMovie(int profileIdx, PatchAssessMovieReq patchAssessMovieReq) throws BaseException {
         try {
 
             int result = profileDao.modifyAssessMovie(profileIdx, patchAssessMovieReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
+            if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
+                throw new BaseException(PATCH_BASKET_FAIL);
+            }
+        } catch (Exception exception) { // DB에 이상이 있는 경우 에러 메시지를 보냅니다.
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    // 좋아요 시리즈 수정 (Patch)
+    public void modifyAssessSeries(int profileIdx, PatchAssessSeriesReq patchAssessSeriesReq) throws BaseException {
+        try {
+
+            int result = profileDao.modifyAssessSeries(profileIdx, patchAssessSeriesReq); // 해당 과정이 무사히 수행되면 True(1), 그렇지 않으면 False(0)입니다.
             if (result == 0) { // result값이 0이면 과정이 실패한 것이므로 에러 메서지를 보냅니다.
                 throw new BaseException(PATCH_BASKET_FAIL);
             }

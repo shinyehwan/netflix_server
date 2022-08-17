@@ -1,6 +1,7 @@
 package com.example.demo.src.movie;
 
 import com.example.demo.src.movie.model.*;
+import com.example.demo.src.series.model.GetSeriesDetailAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -139,6 +140,34 @@ public class MovieDao {
                 ) // RowMapper(위의 링크 참조): 원하는 결과값 형태로 받기
         , getMoviePosterByGenreParams); // 복수개의 회원정보들을 얻기 위해 jdbcTemplate 함수(Query, 객체 매핑 정보)의 결과 반환
 
+    }
+
+    public List<GetMovieDetailAll> getDetail(int movieId) {
+        String sql = "select Actor.name as actorName, Director.name as directorName, Writer.name as writerName, Movie.filmRating, Genre.genre, FeatureMovie.movieFeature\n" +
+                "                from Actor, Movie, ParticipateActor, Director, ParticipateDirector, Writer, ParticipateWriter, Genre, ContactGenre, ContactFeatureMovie, FeatureMovie\n" +
+                "                where Movie.id = ParticipateActor.movieId\n" +
+                "                  and ParticipateActor.actorId = Actor.id\n" +
+                "                  and Movie.id = ParticipateDirector.movieId\n" +
+                "                  and ParticipateDirector.directorId = Director.id\n" +
+                "                  and Movie.id = ParticipateWriter.movieId\n" +
+                "                  and ParticipateWriter.writerId = Writer.id\n" +
+                "                  and Movie.id = ContactGenre.movieId\n" +
+                "                  and ContactGenre.genreId = Genre.id\n" +
+                "                  and Movie.id = ContactFeatureMovie.movieId\n" +
+                "                  and ContactFeatureMovie.featureMovieId = FeatureMovie.id\n" +
+                "                   and Movie.id = ?";
+        int param = movieId;
+
+        return this.jdbcTemplate.query(sql,
+                (rs, rowNum) -> new GetMovieDetailAll(
+                        rs.getString("actorName"),
+                        rs.getString("directorName"),
+                        rs.getString("writerName"),
+                        rs.getInt("filmRating"),
+                        rs.getString("genre"),
+                        rs.getString("seriesFeature")
+                ), param
+        );
     }
 
 

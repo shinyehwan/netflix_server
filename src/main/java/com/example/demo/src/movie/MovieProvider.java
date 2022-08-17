@@ -2,6 +2,7 @@ package com.example.demo.src.movie;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.movie.model.*;
+import com.example.demo.src.series.model.GetSeriesDetailAll;
 import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,16 @@ public class MovieProvider {
         try {
             List<GetMovieGenrePosterRes> getMovieGenrePosterRes = movieDao.getMoviePosterByGenre(genre);
             return getMovieGenrePosterRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 영화 더보기 클릭시 디테일
+    public List<GetMovieDetailAll> getDetail(int movieId) throws BaseException {
+        try {
+            List<GetMovieDetailAll> getMovieDetail = movieDao.getDetail(movieId);
+            return getMovieDetail;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
