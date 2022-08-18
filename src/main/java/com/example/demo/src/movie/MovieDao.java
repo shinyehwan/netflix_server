@@ -165,7 +165,7 @@ public class MovieDao {
                         rs.getString("writerName"),
                         rs.getInt("filmRating"),
                         rs.getString("genre"),
-                        rs.getString("seriesFeature")
+                        rs.getString("movieFeature")
                 ), param
         );
     }

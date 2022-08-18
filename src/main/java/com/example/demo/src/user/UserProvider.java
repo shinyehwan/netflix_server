@@ -90,5 +90,14 @@ public class UserProvider {
             throw new BaseException(USERS_MATCH_USER_ID);
         }
     }
+    // 해당 userIdx를 갖는 profile의 정보 조회
+    public List<GetUserProfileStartRes> getUserProfileStart(int userIdx) throws BaseException {
+        try {
+            List<GetUserProfileStartRes> getUserProfileStartRes = userDao.getUserProfileStart(userIdx);
+            return getUserProfileStartRes;
+        } catch (Exception exception) {
+            throw new BaseException(USERS_MATCH_USER_ID);
+        }
+    }
 
 }

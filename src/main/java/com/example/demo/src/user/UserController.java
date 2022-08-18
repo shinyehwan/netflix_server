@@ -157,6 +157,27 @@ public class UserController {
 
     }
 
+    @ResponseBody
+    @GetMapping("/{userIdx}/start") //
+    public BaseResponse<List<GetUserProfileStartRes>> getUserProfileStart(@PathVariable("userIdx") int userIdx) {
+        // @PathVariable RESTful(URL)에서 명시된 파라미터({})를 받는 어노테이션, 이 경우 userId값을 받아옴.
+        //  null값 or 공백값이 들어가는 경우는 적용하지 말 것
+        //  .(dot)이 포함된 경우, .을 포함한 그 뒤가 잘려서 들어감
+        try {
+            //jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            //userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetUserProfileStartRes> getUserProfileStartRes = userProvider.getUserProfileStart(userIdx);
+            return new BaseResponse<>(getUserProfileStartRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
 
 //   /**
 //     * 4. 유저 결제 상세 정보 조회
