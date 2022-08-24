@@ -79,7 +79,6 @@ public class ProfileDao {
                     param1, param2); // checkNameQuery, checkNameParams 통해 가져온 값(int형)을 반환한다. -> 쿼리문의 결과(존재하지 않음(False,0),존재함(True, 1))를 int형(0,1)으로 반환됩니다.
         }
 
-
     // 찜하기 추가 영화
     public int createBasket(int userIdx, int profileIdx, PostProfileBasketMovieReq postProfileBasketMovieReq) {
         String createBasketQuery = "insert into BasketMovie (profileId, movieId, basket) VALUES (?, ?, ?)"; // 실행될 동적 쿼리문
