@@ -208,3 +208,5 @@ gradle-app.setting
 src/main/resources
 
 **/secret/
+
+**/resources
