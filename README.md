@@ -3,7 +3,7 @@
 
 # Structure
 <p align="center">
-<img width="292" alt="스크린샷 2022-10-18 오후 7 17 08" src="https://user-images.githubusercontent.com/77479647/196403726-60ce823b-fd3e-438d-aada-314315a65394.png">
+<img width="65%" alt="스크린샷 2022-10-18 오후 7 17 08" src="https://user-images.githubusercontent.com/77479647/196403726-60ce823b-fd3e-438d-aada-314315a65394.png">
 </p>
 
 # API Specification
